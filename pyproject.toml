@@ -1,0 +1,92 @@
+[project]
+name = "permit-pydanticai-example"
+version = "0.1.0"
+description = "Example implementation of AI Access Control using Permit.io and PydanticAI"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pydantic>=2.10.6",
+    "pydantic-ai>=0.0.20",
+    "permit>=2.7.2",
+    "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.11.2",
+    "pyright>=1.1.388",
+    "ruff>=0.6.9",
+    "pre-commit>=3.6.0",
+
+]
+
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+src = ["src", "example"]
+
+[tool.ruff.lint]
+extend-select = [
+    "Q",
+    "RUF100",
+    "C90",
+    "UP",
+    "I",
+    "D",
+]
+flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
+isort = { combine-as-imports = true, known-first-party = ["pydantic_ai"] }
+mccabe = { max-complexity = 15 }
+ignore = [
+    "D100", # ignore missing docstring in module
+    "D102", # ignore missing docstring in public method
+    "D104", # ignore missing docstring in public package
+    "D105", # ignore missing docstring in magic methods
+    "D107", # ignore missing docstring in __init__ methods
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+# don't format python in docstrings, pytest-examples takes care of it
+docstring-code-format = false
+quote-style = "single"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+"docs/**/*.py" = ["D"]
+"examples/**/*.py" = ["D101", "D103"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportUnnecessaryIsInstance = false
+reportUnnecessaryTypeIgnoreComment = true
+include = []
+venvPath = ".venv"
+# see https://github.com/microsoft/pyright/issues/7771 - we don't want to error on decorated functions in tests
+# which are not otherwise used
+executionEnvironments = [
+  { root = "tests", reportUnusedFunction = false },
+]
+
+[tool.mypy]
+files = "tests/typed_agent.py,tests/typed_graph.py"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+xfail_strict = true
+filterwarnings = [
+    "error",
+]
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = '.git*,*.svg,*.lock,*.css'
+check-hidden = true
+# Ignore "formatting" like **L**anguage
+ignore-regex = '\*\*[A-Z]\*\*[a-z]+\b'
+# ignore-words-list = ''
