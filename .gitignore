@@ -19,7 +19,8 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
+.DS_Store
+agentdocs.md
 # Virtual Environment
 .env
 .venv
